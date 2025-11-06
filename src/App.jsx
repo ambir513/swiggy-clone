@@ -1,5 +1,5 @@
 import { Route, Routes } from "react-router-dom";
-import { Landing } from "./components/landing";
+import { Landing } from "./components/Landing";
 import { MenuList } from "./components/MenuList";
 import { RestaurantList } from "./components/RestaurantList";
 import { AddToCart } from "./components/AddToCart";
