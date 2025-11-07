@@ -5,41 +5,45 @@ export function Landing() {
 
   const handleSelect = (e) => {
     const selectOption = e.target.options[e.target.selectedIndex];
-
-    if (selectOption.value === "select") return null;
-
-    let href = e.target.value.split(";").join("/");
+    if (selectOption.value === "select") return;
+    const href = e.target.value.split(";").join("/");
     navigate(`/collection/${href}`);
   };
 
   return (
-    <div className="bg-orange-500 h-screen">
-      <div className="mx-auto max-w-6xl">
-        <header className=" py-5 px-5">
-          <nav className="flex justify-between items-center flex-wrap gap-2">
+    <div className="bg-orange-500 min-h-screen flex flex-col">
+      <div className="mx-auto w-full max-w-6xl flex flex-col flex-grow">
+        {/* Header */}
+        <header className="py-5 px-5">
+          <nav className="flex justify-between items-center flex-wrap gap-3">
             <img
               src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/portal/static-assets/images/swiggy_logo_white.png"
               alt="Swiggy"
-              className="md:w-30 w-25"
+              className="w-28 md:w-36"
             />
-            <div className="btn lg:btn-md btn-sm">Welcome to Swiggy</div>
+            <div className="text-white bg-orange-600 hover:bg-orange-700 px-4 py-2 rounded-lg text-sm md:text-base shadow-sm transition">
+              Welcome to Swiggy
+            </div>
           </nav>
         </header>
-        <main className="mx-5 flex justify-center items-center h-50">
-          <h1 className="lg:text-5xl font-semibold tracking-tight lg:w-2xl lg:leading-14 md:w-full text-3xl text-white">
+
+        {/* Main Section */}
+        <main className="flex flex-col justify-center items-center flex-grow px-5 text-center">
+          <h1 className="text-3xl md:text-5xl font-semibold tracking-tight text-white max-w-2xl leading-snug md:leading-tight">
             Order food & groceries. Discover best restaurants. Swiggy it!
           </h1>
-        </main>
-        <div className="mx-5 flex flex-col justify-center items-center">
-          <div className="lg:w-md w-full">
-            <h1 className="text-md py-2 text-black ">Select the location</h1>
+
+          <div className="mt-8 w-full max-w-sm">
+            <h2 className="text-base md:text-lg py-2 text-white font-medium">
+              Select your location
+            </h2>
             <select
               defaultValue="select"
               onChange={handleSelect}
-              className="select"
+              className="w-full rounded-lg border border-orange-200 bg-white px-3 py-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-400 transition"
             >
-              <option className="text-black/50" value="select">
-                Select
+              <option className="text-gray-500" value="select">
+                Select a city
               </option>
               <option value="mumbai;lat=19.0759837&lng=72.8776559">
                 Mumbai
@@ -56,7 +60,24 @@ export function Landing() {
               <option value="delhi;lat=28.6139&lng=77.2090">Delhi</option>
             </select>
           </div>
-        </div>
+        </main>
+
+        {/* Disclaimer Card */}
+        <footer className="p-5">
+          <div className="max-w-sm mx-auto p-4 rounded-2xl border border-orange-200 bg-orange-50 shadow-sm transition hover:shadow-md hover:bg-orange-100">
+            <h2 className="text-lg font-semibold text-orange-700 mb-1">
+              Disclaimer
+            </h2>
+            <p className="text-sm text-gray-700 leading-relaxed">
+              This project is{" "}
+              <span className="font-medium text-orange-600">
+                not affiliated with Swiggy
+              </span>
+              . It’s a small frontend demo that uses Swiggy’s production APIs
+              for learning purposes only.
+            </p>
+          </div>
+        </footer>
       </div>
     </div>
   );

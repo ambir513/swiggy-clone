@@ -1,9 +1,11 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import AccordionCard from "./accordion";
+import { addToCart } from "../store/addToCart.js";
 
 export function AddToCart() {
   const { city, locat, id, menuName, resId } = useParams();
+  const { cartItems, setCartItems } = useContext(addToCart);
   const [open, setOpen] = useState({ isOpen: false, name: "" });
   const [data, setData] = useState({});
 
@@ -71,43 +73,106 @@ export function AddToCart() {
     }
   }
 
+  const handleOrder = async (item) => {
+    alert("Order place successfully");
+
+    const filteredItems = cartItems.filter((i) => i.id !== item.id);
+    setCartItems(filteredItems);
+  };
+
   return (
     <div className="md:mx-auto max-w-4xl mx-5 mt-10">
       {!data?.title ? (
         <div className="skeleton md:h-7 h-16 md:w-92 w-68"></div> // shimmer
       ) : (
-        <div className="flex flex-wrap gap-2">
-          <div className="">
-            <Link
-              to={"/"}
-              className="text-zinc-400 text-sm hover:text-black active:text-black"
-            >
-              Home
-            </Link>
+        <div className="flex justify-between items-center mb-5">
+          <div className="flex flex-wrap gap-2">
+            <div className="">
+              <Link
+                to={"/"}
+                className="text-zinc-400 text-sm hover:text-black active:text-black"
+              >
+                Home
+              </Link>
+            </div>
+            <div className="">
+              <span className="text-zinc-400 text-sm">{" / "}&nbsp;</span>
+              <Link
+                to={`/collection/${city}/${locat}`}
+                className="text-zinc-400 text-sm hover:text-black active:text-black"
+              >
+                Food Items
+              </Link>
+            </div>
+            <div className="">
+              <span className="text-zinc-400 text-sm">{" / "}</span>
+              <Link
+                to={`/restaurants/${city}/${locat}/${resId}/${menuName}`}
+                className="text-zinc-400 text-sm hover:text-black active:text-black"
+              >
+                Restaurants Menu
+              </Link>
+            </div>
+            <div className="">
+              <span className="text-zinc-400 text-sm">{" / "}</span>
+              <Link className="font-semibold text-sm hover:text-black active:text-black">
+                {data?.title}
+              </Link>
+            </div>
           </div>
-          <div className="">
-            <span className="text-zinc-400 text-sm">{" / "}&nbsp;</span>
-            <Link
-              to={`/collection/${city}/${locat}`}
-              className="text-zinc-400 text-sm hover:text-black active:text-black"
+          <div className="dropdown dropdown-bottom dropdown-end">
+            <div tabIndex={0} role="button" className="btn m-1">
+              Add To Cart {cartItems.length > 0 && `(${cartItems.length})`}
+            </div>
+            <ul
+              tabIndex="-1"
+              className="dropdown-content menu bg-base-100 rounded-box z-1 w-[300px] p-2 shadow-sm gap-2"
             >
-              Food Items
-            </Link>
-          </div>
-          <div className="">
-            <span className="text-zinc-400 text-sm">{" / "}</span>
-            <Link
-              to={`/restaurants/${city}/${locat}/${resId}/${menuName}`}
-              className="text-zinc-400 text-sm hover:text-black active:text-black"
-            >
-              Restaurants Menu
-            </Link>
-          </div>
-          <div className="">
-            <span className="text-zinc-400 text-sm">{" / "}</span>
-            <Link className="font-semibold text-sm hover:text-black active:text-black">
-              {data?.title}
-            </Link>
+              {cartItems?.length === 0 ? (
+                <li className=" rounded-lg  border text-center px-2 py-1">
+                  no items
+                </li>
+              ) : (
+                cartItems?.map((item, index) => (
+                  <li key={index} className="border rounded-lg w-fit h-[95px]">
+                    <div className="">
+                      <div className="flex gap-2">
+                        <img
+                          draggable={false}
+                          src={`https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_55,h_55,c_fit/${item?.imageId}`}
+                          alt="Food"
+                          className="select-none object-cover w-full h-full rounded-lg"
+                        />
+                        <div className="flex flex-col gap-y-2">
+                          <p className="text-xs">{item?.name}</p>
+                          <p className="text-sm font-semibold">{item?.price}</p>
+                        </div>
+                      </div>
+                      <div className="flex flex-col gap-y-2">
+                        <button
+                          className="btn btn-xs text-white bg-red-500"
+                          onClick={() => {
+                            const filterDeleteItem = cartItems?.filter(
+                              (i) => i.id !== item.id
+                            );
+
+                            setCartItems((prev) => [...filterDeleteItem]);
+                          }}
+                        >
+                          Delete
+                        </button>
+                        <button
+                          className="btn btn-xs text-white bg-green-500"
+                          onClick={() => handleOrder(item)}
+                        >
+                          Confirm order
+                        </button>
+                      </div>
+                    </div>
+                  </li>
+                ))
+              )}
+            </ul>
           </div>
         </div>
       )}
@@ -209,7 +274,23 @@ export function AddToCart() {
               {!data?.title ? (
                 <div className="skeleton h-12 w-48"></div> // shimmer
               ) : (
-                <button className="btn border text-orange-500 border-orange-500 w-[200px]">
+                <button
+                  className="btn border text-orange-500 border-orange-500 w-[200px]"
+                  onClick={() =>
+                    setCartItems((prev) => [
+                      ...prev,
+                      {
+                        name: data.title,
+                        cuisines: data.cuisines,
+                        id: data.id,
+                        imageId: data.imageId,
+                        costForTwoMessage: data.costForTwoMessage,
+                        price: data.price,
+                        rating: data.rating,
+                      },
+                    ])
+                  }
+                >
                   Add to cart
                 </button>
               )}

@@ -1,4 +1,9 @@
+import { useContext } from "react";
+import { addToCart } from "../store/addToCart";
+
 export default function AccordionCard({ item, name, open }) {
+  const { cartItems, setCartItems } = useContext(addToCart);
+
   return (
     <div
       className={`${name === open?.name && open?.isOpen ? "block " : "hidden"}`}
@@ -51,7 +56,23 @@ export default function AccordionCard({ item, name, open }) {
               alt="Food"
               className="select-none object-cover w-full h-full"
             />
-            <button className="absolute bottom-2 btn  left-0 right-0 border text-orange-500 border-orange-500 mx-3 md:btn-sm btn-xs">
+            <button
+              className="absolute bottom-2 btn  left-0 right-0 border text-orange-500 border-orange-500 mx-3 md:btn-sm btn-xs"
+              onClick={() =>
+                setCartItems((prev) => [
+                  ...prev,
+                  {
+                    name: item.name,
+                    cuisines: item.cuisines,
+                    id: item.id,
+                    imageId: item.imageId,
+                    costForTwoMessage: item.costForTwoMessage,
+                    price: item.price,
+                    rating: item.rating,
+                  },
+                ])
+              }
+            >
               Add to Cart
             </button>
           </figure>
